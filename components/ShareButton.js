@@ -31,14 +31,26 @@ const MobileShareButton = ({children, output, wordleRef}) => {
             }
           )
         ];
-        const shareData = {
+        let shareData = {
           files: filesArray,
         };
+
+        if (!(navigator.canShare(shareData))) {
+          const newFilesArray = [
+            new File([blob], 'wordle-image.png', {
+              type: blob.type,
+            }),
+          ];
+          shareData = {
+            files: newFilesArray,
+          };
+        }
 
         navigator.share(shareData);
       })
       .catch((err) => {
         console.error('oops, something went wrong!', err);
+        window.location.reload(true);
       });
     }
   }, [wordleRef]);
